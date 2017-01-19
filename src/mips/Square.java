@@ -6,7 +6,6 @@
 package mips;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -16,26 +15,42 @@ import java.awt.Rectangle;
  * @author Bruno
  */
 public class Square extends Rectangle implements IRenderable {
-
+    private Color color = Color.RED;
+    private static Rectangle bounds = null;
+    
+    /**
+     * Get the value of color
+     *
+     * @return the value of color
+     */
+    public Color getColor() {
+        return color;
+    }
+    
     public Square() {
         super();
     }
-
-    public Square(int side, Point point) {
-        super(point, new Dimension(side, side));
-    }
-
-    public Square(int side) {
-        super(side, side);
-    }
-
-    public void render(Graphics g, Color c) {
-        g.setColor(c);
-        g.fillRect(x, y, width, height);
-    }
     
+    public Square(DimensionSameSize side, Point point) {
+        super(point, side);
+    }
+
+    public static void setBoundsCanvas(Rectangle bounds) 
+            throws InstantiationException{
+        if(Square.bounds == null){
+            Square.bounds = bounds;
+        } else {
+            throw new InstantiationException();
+        }
+    }
+
+    public Square(DimensionSameSize side) {
+        super(side);
+    }
+
     @Override
     public void render(Graphics g) {
-        render(g, Color.RED);
+        g.setColor(color);
+        g.fillRect(x, y, width, height);
     }
 }

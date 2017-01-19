@@ -5,12 +5,13 @@ package mips;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -20,15 +21,25 @@ import javax.swing.SwingUtilities;
  */
 public class Client extends JFrame implements Runnable {
 
-    private Player player;
-    private Square square;
+    private final Player player;
+    private final ArrayList<Square> squares;
     private BufferStrategy bs;
     private Thread appThread;
     private boolean running;
     
     public Client() {
         player = new Player();
-        square = new Square(16);
+        squares = new ArrayList<>();
+
+        DimensionSameSize dimensionComponents = new DimensionSameSize(32);
+        Point pointComponents = new Point(16,16);
+        
+        Color[] colors = {Color.RED, Color.GREEN, Color.ORANGE, Color.MAGENTA};
+
+        for (int i = 0; i < 4; i++) {
+            squares.add(new Square(dimensionComponents, pointComponents));
+            pointComponents.translate(16 * (i % 2), 16 * i / 2);
+        }
     }
 
     protected void createAndShowGui() {
@@ -73,7 +84,9 @@ public class Client extends JFrame implements Runnable {
                     g = bs.getDrawGraphics();
                     g.clearRect(0, 0, getWidth(), getHeight());
                     //render(g);
-                    square.render(g);
+                    for (Square square : squares) {
+                        square.render(g);
+                    }
                 } finally {
                     if (g != null) {
                         g.dispose();
@@ -84,8 +97,8 @@ public class Client extends JFrame implements Runnable {
         } while(bs.contentsLost());
     }
     private void render(Graphics g) {
-        g.setColor(Color.red);
-        g.drawString(square.toString(), 640, 400);
+        //g.setColor(Color.red);
+        //g.drawString(square.toString(), 0, 0);
     }
     
     /**

@@ -5,14 +5,16 @@ package mips;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import javax.swing.border.Border;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -22,45 +24,53 @@ import javax.swing.SwingUtilities;
 public class Client extends JFrame implements Runnable {
 
     private final Player player;
-    private final ArrayList<Square> squares;
+    private final ArrayList<Component> components;
     private BufferStrategy bs;
     private Thread appThread;
     private boolean running;
-    
-    public Client() {
+
+    public Client() throws HeadlessException {
+        super();
         player = new Player();
-        squares = new ArrayList<>();
-
-        DimensionSameSize dimensionComponents = new DimensionSameSize(32);
-        Point pointComponents = new Point(16,16);
-        
-        Color[] colors = {Color.RED, Color.GREEN, Color.ORANGE, Color.MAGENTA};
-
-        for (int i = 0; i < 4; i++) {
-            squares.add(new Square(dimensionComponents, pointComponents));
-            pointComponents.translate(16 * (i % 2), 16 * i / 2);
-        }
+        components = new ArrayList<Component>();
+        addComponents();
     }
-
+    
+    private void addComponents() {
+        ProgramCounter pc = new ProgramCounter(30, 40);
+        components.add(pc);
+    }
+    
     protected void createAndShowGui() {
+        GridBagLayout layout = new GridBagLayout();
+        JPanel pane = new JPanel(layout);
+        
         /* Canvas */
         Canvas canvas = new Canvas();
-        canvas.setSize(800, 600);
-        canvas.setBackground(Color.CYAN);
+        canvas.setSize(400, 600);
+        canvas.setBackground(Color.ORANGE);
         canvas.setIgnoreRepaint(true);
+        pane.add(canvas);
+        
+        Canvas test = new Canvas();
+        test.setSize(400,600);
+        test.setBackground(Color.GREEN);
+        canvas.setIgnoreRepaint(true);
+        pane.add(test);
         
         /* JFrame components */
-        getContentPane().add(canvas);
+        getContentPane().add(pane);
         setTitle("Hey guys!");
         setIgnoreRepaint(true);
         pack();
         /* center view */
         setLocationRelativeTo(null);
         setVisible(true);
+        setResizable(false);
         
         canvas.createBufferStrategy(2);
         bs = canvas.getBufferStrategy();
-        
+
         appThread = new Thread(this);
         appThread.start();
     }
@@ -84,8 +94,8 @@ public class Client extends JFrame implements Runnable {
                     g = bs.getDrawGraphics();
                     g.clearRect(0, 0, getWidth(), getHeight());
                     //render(g);
-                    for (Square square : squares) {
-                        square.render(g);
+                    for (Component component : components) {
+                        component.render(g);
                     }
                 } finally {
                     if (g != null) {

@@ -7,6 +7,7 @@ import com.sun.javafx.geom.Vec2d;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
@@ -140,7 +141,7 @@ public class MainApplication extends JFrame implements Runnable {
                         g.clearRect(0, 0, getWidth(), getHeight());
                         clear = false;
                     }
-                    //render(g);
+                    render(g);
                     if (pause == false) {
                         for (Component component : components) {
                             component.render(g);
@@ -174,8 +175,10 @@ public class MainApplication extends JFrame implements Runnable {
     }
 
     private void render(Graphics g) {
-        //g.setColor(Color.red);
-        //g.drawString(square.toString(), 0, 0);
+        g.setColor(Color.red);
+        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 24));
+        g.drawString("ENTER - Pause", 100, 100);
+        g.drawString("A - Clear", 150, 200);
     }
 
     /**

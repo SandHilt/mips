@@ -6,6 +6,7 @@
 package mips;
 
 import java.awt.Graphics;
+
 /**
  *
  * @author Bruno

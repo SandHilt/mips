@@ -9,21 +9,15 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.Random;
 
 /**
  *
  * @author Bruno
  */
 public abstract class Component implements IRenderable {
-    private Rectangle bounds;
-    private Color color;
-    private Point origin;
+    private final Rectangle bounds;
+    private final Color color;
 
-    public Point getOrigin() {
-        return origin;
-    }
-    
     /**
      *
      * @return
@@ -32,23 +26,13 @@ public abstract class Component implements IRenderable {
         return this.bounds;
     }
     
+    
     /**
      *
      * @return
      */
     public Color getColor(){
         return this.color;
-    }
-
-    private static final String[] colors = {"f44336", "e91e63", "9c27b0",
-        "673ab7", "3f51b5", "2196f3", "03a9f4", "00bcd4", "009688", "4caf50",
-        "8bc34a", "cddc39", "ffeb3b", "ffc107", "ff9800", "ff5722", "795548",
-        "9e9e9e", "607d8b"
-    };
-    
-    public void changeColor(){
-        int idx = new Random().nextInt(colors.length);
-        this.color = Color.decode("#" + colors[idx]);
     }
 
     /**
@@ -59,7 +43,6 @@ public abstract class Component implements IRenderable {
     public Component(Rectangle bounds, Color color) {
         this.color = color;
         this.bounds = bounds;
-        this.origin = bounds.getLocation();
     }
     
     /**
@@ -68,6 +51,16 @@ public abstract class Component implements IRenderable {
      */
     public void fillRectangle(Graphics g) {
         g.setColor(color);
-        g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+        g.draw3DRect(bounds.x, bounds.y, bounds.width, bounds.height, true);
+    }
+    
+    public static void center(Rectangle outside, Rectangle inside) {
+        int x = (outside.width - inside.width) / 2;
+        int y = (outside.height - inside.height) / 2;
+
+        x += outside.x;
+        y += outside.y;
+        
+        inside.setLocation(x, y);
     }
 }

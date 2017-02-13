@@ -3,27 +3,16 @@
  */
 package mips;
 
-import com.sun.javafx.geom.Vec2d;
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
-import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
-import java.util.Random;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -37,50 +26,36 @@ public class MainApplication extends JFrame implements Runnable {
     private BufferStrategy bs;
     private Thread appThread;
     private boolean running;
-    private final Dimension HALF_DIMENSION;
-
-    private volatile boolean clear;
-    private volatile boolean pause;
+    private final Rectangle application;
 
     public MainApplication() throws HeadlessException {
         super();
         player = new Player();
         components = new ArrayList<Component>();
-        HALF_DIMENSION = new Dimension(800, 600);
-
-        clear = false;
-        pause = false;
+        application = new Rectangle(800, 600);
 
         addComponents();
     }
 
     private void addComponents() {
-        Rectangle bnd = new Rectangle(400, 210, 30, 20);
-        Color col = Color.magenta;
+        ProgramCounter pc = ProgramCounter.getInstance();
+        pc.getBounds().setSize(36, 48);
 
-        ProgramCounter pc = new ProgramCounter(bnd, col);
+        Rectangle half = new Rectangle(application);
+        half.width /= 2;
+        Component.center(half, pc.getBounds());
+        
         components.add(pc);
     }
 
     protected void createAndShowGui() {
-        GridBagLayout layout = new GridBagLayout();
-        JPanel pane = new JPanel(layout);
-
         /* Canvas */
         Canvas canvas = new Canvas();
-        canvas.setSize(HALF_DIMENSION);
-//        canvas.setBackground(Color.ORANGE);
+        canvas.setSize(application.getSize());
         canvas.setIgnoreRepaint(true);
-        pane.add(canvas);
-
-//        Canvas test = new Canvas();
-//        test.setSize(HALF_DIMENSION);
-//        test.setBackground(Color.GREEN);
-//        canvas.setIgnoreRepaint(true);
-//        pane.add(test);
 
         /* JFrame components */
-        getContentPane().add(pane);
+        getContentPane().add(canvas);
         setTitle("Illusion");
         setIgnoreRepaint(true);
         pack();
@@ -91,29 +66,8 @@ public class MainApplication extends JFrame implements Runnable {
 
         canvas.createBufferStrategy(2);
         bs = canvas.getBufferStrategy();
-
-        canvas.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case (KeyEvent.VK_A):
-                        clear = true;
-                        break;
-
-                    case (KeyEvent.VK_ENTER):
-                        pause = !pause;
-                        break;
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
+        
+        application.setBounds(getBounds());
 
         appThread = new Thread(this);
         appThread.start();
@@ -137,32 +91,12 @@ public class MainApplication extends JFrame implements Runnable {
                 Graphics g = null;
                 try {
                     g = bs.getDrawGraphics();
-                    if (clear == true) {
-                        g.clearRect(0, 0, getWidth(), getHeight());
-                        clear = false;
-                    }
+                    g.clearRect(0, 0, getWidth(), getHeight());
+
                     render(g);
-                    if (pause == false) {
-                        for (Component component : components) {
-                            component.render(g);
 
-                            final int speed = new Random().nextInt(50);
-                            final double angle = 2 * Math.PI * new Random().nextDouble();
-                            final Point osc = new Point();
-
-                            osc.x = (int) (speed * Math.sin(angle));
-                            osc.y = (int) (speed * Math.cos(angle));
-
-                            Rectangle cenario = new Rectangle(HALF_DIMENSION);
-
-                            if (cenario.contains(component.getBounds())) {
-                                component.getBounds().translate(osc.x, osc.y);
-                                component.changeColor();
-                            } else {
-                                Point origin = component.getOrigin();
-                                component.getBounds().setLocation(origin);
-                            }
-                        }
+                    for (Component component : components) {
+                        component.render(g);
                     }
                 } finally {
                     if (g != null) {
@@ -175,10 +109,8 @@ public class MainApplication extends JFrame implements Runnable {
     }
 
     private void render(Graphics g) {
-        g.setColor(Color.red);
-        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 24));
-        g.drawString("ENTER - Pause", 100, 100);
-        g.drawString("A - Clear", 150, 200);
+        g.setColor(Color.black);
+        g.drawString("MIPS", 5, 15);
     }
 
     /**

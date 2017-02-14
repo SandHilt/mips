@@ -13,29 +13,21 @@ import java.awt.Rectangle;
  *
  * @author Bruno
  */
-public class ProgramCounter extends Component {
-    private static ProgramCounter pc;
-    private int id;
-    private static final String TEXT = "PC";
+public class InstructionMemory extends Component {
+    private static InstructionMemory comp;
+    private final String TEXT;
 
-    private ProgramCounter(Rectangle bounds, Color color) {
+    private InstructionMemory(Rectangle bounds, Color color) {
         super(bounds, color);
+        TEXT = "Instruction Memory";
     }
     
-    public static ProgramCounter getInstance() {
-        if (pc == null) {
-            pc = new ProgramCounter(new Rectangle(36, 48), Color.black);
+    public static InstructionMemory getInstance() {
+        if(comp == null){
+            comp = new InstructionMemory(new Rectangle(190, 180), Color.black);
         }
         
-        return pc;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void advanceInstruction() {
-        this.id++;
+        return comp;
     }
 
     @Override
@@ -45,4 +37,5 @@ public class ProgramCounter extends Component {
         g.drawRect(r.x, r.y, r.width, r.height);
         drawText(g, TEXT);
     }
+    
 }

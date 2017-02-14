@@ -39,13 +39,21 @@ public class MainApplication extends JFrame implements Runnable {
 
     private void addComponents() {
         ProgramCounter pc = ProgramCounter.getInstance();
-        pc.getBounds().setSize(36, 48);
 
         Rectangle half = new Rectangle(application);
         half.width /= 2;
         Component.center(half, pc.getBounds());
-        
         components.add(pc);
+        
+        DataMemory dm = DataMemory.getInstance();
+        half.x += half.width;
+        Component.center(half, dm.getBounds());
+        components.add(dm);
+        
+        
+        InstructionMemory im = InstructionMemory.getInstance();
+        Component.center(application, im.getBounds());
+        components.add(im);
     }
 
     protected void createAndShowGui() {

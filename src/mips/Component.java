@@ -43,10 +43,11 @@ public abstract class Component implements IRenderable {
     public void drawText(Graphics g, String text) {
         g.setColor(color);
         
-        Rectangle fontBounds;
-        fontBounds = g.getFontMetrics().getStringBounds(text, g).getBounds();
-        Component.center(bounds, fontBounds);
-        fontBounds.y += g.getFontMetrics().getAscent();
+        FontMetrics fm = g.getFontMetrics();
+        
+        Rectangle fontBounds = fm.getStringBounds(text, g).getBounds();
+        center(bounds, fontBounds);
+        fontBounds.y += fm.getAscent();
         
         for (String line : text.split("\n")) {
             g.drawString(line, fontBounds.x, fontBounds.y);

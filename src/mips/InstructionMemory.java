@@ -19,7 +19,7 @@ public class InstructionMemory extends Component {
 
     private InstructionMemory(Rectangle bounds, Color color) {
         super(bounds, color);
-        TEXT = "Instruction Memory";
+        TEXT = "Instruction\nMemory\nData\nMaster";
     }
     
     public static InstructionMemory getInstance() {

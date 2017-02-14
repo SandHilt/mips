@@ -18,6 +18,7 @@ public abstract class Component implements IRenderable {
 
     private final Rectangle bounds;
     private final Color color;
+    private boolean once;
 
     /**
      *
@@ -38,20 +39,54 @@ public abstract class Component implements IRenderable {
     public Component(Rectangle bounds, Color color) {
         this.bounds = bounds;
         this.color = color;
+        this.once = false;
     }
-    
+
     public void drawText(Graphics g, String text) {
         g.setColor(color);
-        
+
         FontMetrics fm = g.getFontMetrics();
-        
+
         Rectangle fontBounds = fm.getStringBounds(text, g).getBounds();
         center(bounds, fontBounds);
-        fontBounds.y += fm.getAscent();
-        
+        fontBounds.translate(0, fm.getAscent());
+
+        if (once == false) {
+            System.out.println("-------------");
+        }
         for (String line : text.split("\n")) {
-            g.drawString(line, fontBounds.x, fontBounds.y);
-            fontBounds.translate(0, g.getFontMetrics().getHeight());
+            Rectangle lineBound = fm.getStringBounds(line, g).getBounds();
+            lineBound.setLocation(fontBounds.getLocation());
+
+            center(fontBounds, lineBound);
+            
+            if (once == false) {
+                System.out.println("fontBounds: " + fontBounds);
+                System.out.println("line: " + line + " x " + lineBound);
+            }
+            
+            g.drawRect(
+                    fontBounds.x, 
+                    fontBounds.y - fm.getAscent(), 
+                    fontBounds.width, 
+                    fontBounds.height
+            );
+            
+            g.setColor(Color.red);
+            g.drawRect(
+                    lineBound.x, 
+                    lineBound.y - fm.getAscent(), 
+                    lineBound.width, 
+                    lineBound.height
+            );
+            g.setColor(color);
+            
+            g.drawString(line, lineBound.x, lineBound.y);
+            fontBounds.translate(0, fm.getHeight());
+        }
+        if (once == false) {
+            System.out.println("-------------");
+            once = true;
         }
     }
 

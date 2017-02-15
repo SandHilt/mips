@@ -16,10 +16,11 @@ import java.awt.Rectangle;
 public class ProgramCounter extends Component {
     private static ProgramCounter pc;
     private int id;
-    private static final String TEXT = "PC";
+    private final String TEXT;
 
     private ProgramCounter(Rectangle bounds, Color color) {
         super(bounds, color);
+        TEXT = "PC";
     }
     
     public static ProgramCounter getInstance() {

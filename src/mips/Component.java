@@ -16,16 +16,11 @@ import java.awt.Rectangle;
  */
 public abstract class Component implements IRenderable {
 
-    private final Rectangle bounds;
+    private final Rectangle shape;
     private final Color color;
-    private boolean once;
 
-    /**
-     *
-     * @return
-     */
     public Rectangle getBounds() {
-        return this.bounds;
+        return shape;
     }
 
     /**
@@ -33,13 +28,18 @@ public abstract class Component implements IRenderable {
      * @return
      */
     public Color getColor() {
-        return this.color;
+        return color;
     }
 
     public Component(Rectangle bounds, Color color) {
-        this.bounds = bounds;
+        this.shape = bounds;
         this.color = color;
-        this.once = false;
+    }
+
+    private void drawRect(Graphics g, Rectangle r, Color c) {
+        g.setColor(c);
+        g.drawRect(r.x, r.y, r.width, r.height);
+        g.setColor(color);
     }
 
     public void drawText(Graphics g, String text) {
@@ -47,46 +47,52 @@ public abstract class Component implements IRenderable {
 
         FontMetrics fm = g.getFontMetrics();
 
+        /* rectangle from text */
         Rectangle fontBounds = fm.getStringBounds(text, g).getBounds();
-        center(bounds, fontBounds);
+
+        /* center in component */
+        center(shape, fontBounds);
+
+        /* translate height need to fix */
         fontBounds.translate(0, fm.getAscent());
 
-        if (once == false) {
-            System.out.println("-------------");
-        }
-        for (String line : text.split("\n")) {
-            Rectangle lineBound = fm.getStringBounds(line, g).getBounds();
-            lineBound.setLocation(fontBounds.getLocation());
+        /* a auxiliar for each line */
+        Rectangle aux = fontBounds.getBounds();
 
-            center(fontBounds, lineBound);
+        String[] words = text.split("\n");
+
+        for (int i = 0, len = words.length; i < len; i++) {
+            String line = words[i];
             
-            if (once == false) {
-                System.out.println("fontBounds: " + fontBounds);
-                System.out.println("line: " + line + " x " + lineBound);
+            /* get bound of a line */
+            Rectangle lineBound = fm.getStringBounds(line, g).getBounds();
+            
+            /* put bound in same position of initial center */
+            lineBound.setLocation(aux.getLocation());
+            
+            if (len > 1) {
+                /* first position of words */
+                Rectangle block = aux.getBounds();
+                block.height *= len;
+                center(shape, block);
+                block.translate(0, fm.getAscent());
+                
+                aux.setLocation(block.getLocation());
+                aux.translate(0, fm.getHeight() * i);
+                
+                lineBound.setLocation(block.getLocation());
+                lineBound.translate(0, fm.getHeight() * i);
             }
             
-            g.drawRect(
-                    fontBounds.x, 
-                    fontBounds.y - fm.getAscent(), 
-                    fontBounds.width, 
-                    fontBounds.height
-            );
+            /* align text in center */
+            center(aux, lineBound);
             
-            g.setColor(Color.red);
-            g.drawRect(
-                    lineBound.x, 
-                    lineBound.y - fm.getAscent(), 
-                    lineBound.width, 
-                    lineBound.height
-            );
-            g.setColor(color);
-            
+            /* show border in texts */
+            Rectangle q = lineBound.getBounds();
+            q.translate(0, -fm.getAscent());
+
             g.drawString(line, lineBound.x, lineBound.y);
-            fontBounds.translate(0, fm.getHeight());
-        }
-        if (once == false) {
-            System.out.println("-------------");
-            once = true;
+            aux.translate(0, fm.getHeight());
         }
     }
 

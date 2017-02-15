@@ -19,7 +19,7 @@ public class InstructionMemory extends Component {
 
     private InstructionMemory(Rectangle bounds, Color color) {
         super(bounds, color);
-        TEXT = "Instruction\nMemory\nData\nMaster";
+        TEXT = "Instruction\nMemory";
     }
     
     public static InstructionMemory getInstance() {
@@ -33,7 +33,7 @@ public class InstructionMemory extends Component {
     @Override
     public void render(Graphics g) {
         g.setColor(getColor());
-        Rectangle r = getBounds();
+        Rectangle r = getShape();
         g.drawRect(r.x, r.y, r.width, r.height);
         drawText(g, TEXT);
     }

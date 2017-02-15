@@ -42,7 +42,7 @@ public class ProgramCounter extends Component {
     @Override
     public void render(Graphics g) {
         g.setColor(getColor());
-        Rectangle r = getBounds();
+        Rectangle r = getShape();
         g.drawRect(r.x, r.y, r.width, r.height);
         drawText(g, TEXT);
     }

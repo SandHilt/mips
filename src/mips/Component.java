@@ -6,8 +6,10 @@
 package mips;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 /**
@@ -19,14 +21,18 @@ public abstract class Component implements IRenderable {
     private final Rectangle shape;
     private final Color color;
 
-    public Rectangle getBounds() {
-        return shape;
+    public Rectangle getShape() {
+        return shape.getBounds();
     }
-
-    /**
-     *
-     * @return
-     */
+    
+    public void setLocation(Point p) {
+        shape.setLocation(p);
+    }
+    
+    public void setSize(Dimension d) {
+        shape.setSize(d);
+    }
+    
     public Color getColor() {
         return color;
     }
@@ -96,6 +102,12 @@ public abstract class Component implements IRenderable {
         }
     }
 
+    public static void center(Rectangle outside, Component component) {
+        Rectangle inside = component.getShape();
+        center(outside, inside);
+        component.setLocation(inside.getLocation());
+    }
+    
     public static void center(Rectangle outside, Rectangle inside) {
         int x = (outside.width - inside.width) / 2;
         int y = (outside.height - inside.height) / 2;

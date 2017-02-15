@@ -42,18 +42,22 @@ public class MainApplication extends JFrame implements Runnable {
 
         Rectangle half = new Rectangle(application);
         half.width /= 2;
-        Component.center(half, pc.getBounds());
+        Component.center(half, pc);
         components.add(pc);
         
         DataMemory dm = DataMemory.getInstance();
         half.x += half.width;
-        Component.center(half, dm.getBounds());
+        Component.center(half, dm);
         components.add(dm);
         
         
         InstructionMemory im = InstructionMemory.getInstance();
-        Component.center(application, im.getBounds());
+        Component.center(application, im);
         components.add(im);
+        
+        ALU alu = new ALU(new Rectangle(16, 16), Color.magenta);
+        Component.center(application, alu);
+        components.add(alu);
     }
 
     protected void createAndShowGui() {

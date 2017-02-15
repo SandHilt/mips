@@ -27,6 +27,10 @@ public class ALU extends Component {
         rectToPol(r);
     }
     
+    public ALU(){
+        this(new Rectangle(64, 64), Color.black);
+    }
+    
     private void rectToPol(Rectangle r) {
         shape.reset();
         
@@ -69,6 +73,6 @@ public class ALU extends Component {
     @Override
     public void render(Graphics g) {
         g.setColor(getColor());
-        g.fillPolygon(shape);
+        g.drawPolygon(shape);
     }
 }

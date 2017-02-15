@@ -41,7 +41,7 @@ public abstract class Component implements IRenderable {
         this.shape = bounds;
         this.color = color;
     }
-
+    
     private void drawRect(Graphics g, Rectangle r, Color c) {
         g.setColor(c);
         g.drawRect(r.x, r.y, r.width, r.height);

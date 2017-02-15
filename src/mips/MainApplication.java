@@ -54,9 +54,11 @@ public class MainApplication extends JFrame implements Runnable {
         InstructionMemory im = InstructionMemory.getInstance();
         Component.center(application, im);
         components.add(im);
-        
-        ALU alu = new ALU(new Rectangle(16, 16), Color.magenta);
-        Component.center(application, alu);
+
+        half = application.getBounds();
+        half.width /= 4;
+        ALU alu = new ALU();
+        Component.center(half, alu);
         components.add(alu);
     }
 

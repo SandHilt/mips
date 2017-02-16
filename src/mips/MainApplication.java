@@ -72,10 +72,12 @@ public class MainApplication extends JFrame implements Runnable {
         half.x = half.width;
         Component.center(half, dm);
         components.add(dm);
-
+        
         InstructionMemory im = InstructionMemory.getInstance();
         Component.center(application, im);
         components.add(im);
+        
+        Component.wire(im, dm);
 
         half = application.getBounds();
         half.width /= 4;

@@ -25,6 +25,15 @@ public class ALU extends Component {
     private final String name;
     private AffineTransform transform;
 
+    public enum InputPole {
+        RD, RT
+    };
+
+    @Override
+    public Point getInput() {
+        return null;
+    }
+    
     /**
      *
      * @param r
@@ -44,7 +53,7 @@ public class ALU extends Component {
     public ALU() {
         this(new Rectangle(80, 80), Color.black);
     }
-
+    
     private void rectToPol(Rectangle r) {
         polygon.reset();
 

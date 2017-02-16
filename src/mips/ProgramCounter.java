@@ -37,7 +37,9 @@ public class ProgramCounter extends Component {
     }
 
     public void advanceInstruction() {
-        this.id++;
+        if(Math.addExact(id, 4) < (Math.pow(2, 32) - 1)){
+            id += 4;
+        }
     }
 
     @Override
@@ -46,5 +48,6 @@ public class ProgramCounter extends Component {
         Rectangle r = getBounds();
         g.drawRect(r.x, r.y, r.width, r.height);
         drawText(g, TEXT);
+        drawPoles(g);
     }
 }

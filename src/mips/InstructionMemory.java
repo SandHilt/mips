@@ -38,6 +38,7 @@ public class InstructionMemory extends Component {
         Rectangle r = getBounds();
         g.drawRect(r.x, r.y, r.width, r.height);
         drawText(g, TEXT);
+        drawPoles(g);
     }
 
 }

@@ -37,18 +37,17 @@ public abstract class Component implements IRenderable {
         inside.setLocation(x, y);
     }
 
-    public static void wire(Component c, Component d) {
-        LinkedList<Rectangle> outputs = c.getOutput();
+    public void wire(Component d) {
         LinkedList<Rectangle> inputs = d.getInput();
         
-        Rectangle rectangleFromOutput = outputs.getFirst();
+        Rectangle rectangleFromOutput = this.output.getFirst();
         Rectangle rectangleFromInput = inputs.getFirst();
         
         Point output = getCenter(rectangleFromOutput);
         Point input = getCenter(rectangleFromInput);
         
         Line2D line = new Line2D.Double(input, output);
-        c.addLine(line);
+        addLine(line);
     }
 
     private final Rectangle bounds;

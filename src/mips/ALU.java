@@ -42,7 +42,7 @@ public class ALU extends Component {
      *
      */
     public ALU() {
-        this(new Rectangle(64, 64), Color.black);
+        this(new Rectangle(80, 80), Color.black);
     }
 
     private void rectToPol(Rectangle r) {
@@ -54,8 +54,8 @@ public class ALU extends Component {
             r.x + r.width,
             r.x,
             r.x,
-            r.x + r.width / 2,
-            r.x + r.width / 2,
+            r.x + r.width * 3 / 8,
+            r.x + r.width * 3 / 8,
             r.x
         };
         int[] ypoints = {
@@ -128,8 +128,8 @@ public class ALU extends Component {
     @Override
     public void drawText(Graphics g, String text) {
         Rectangle r = polygon.getBounds();
-        r.width /= 2;
-        r.translate(r.width, 0);
+        r.translate(Math.floorDiv(r.width * 3, 8), 0);
+        r.width = Math.floorDiv(r.width * 5, 8);
         super.drawText(g, text, r);
     }
 

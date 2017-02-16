@@ -14,6 +14,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.util.List;
 
 /**
  *
@@ -24,16 +25,12 @@ public class ALU extends Component {
     private final Polygon polygon;
     private final String name;
     private AffineTransform transform;
+    private List<Point> inputs;
 
     public enum InputPole {
         RD, RT
     };
 
-    @Override
-    public Point getInput() {
-        return null;
-    }
-    
     /**
      *
      * @param r
@@ -45,6 +42,7 @@ public class ALU extends Component {
         polygon = new Polygon();
         rectToPol(r);
         resetTransform();
+        addPoles(polygon.getBounds());
     }
 
     /**
@@ -109,6 +107,7 @@ public class ALU extends Component {
         r.setSize(d);
         rectToPol(r);
         resetTransform();
+        addPoles(polygon.getBounds());
     }
 
     /**
@@ -121,6 +120,7 @@ public class ALU extends Component {
         r.setLocation(p);
         rectToPol(r);
         resetTransform();
+        addPoles(polygon.getBounds());
     }
 
     private void resetTransform() {
@@ -129,6 +129,10 @@ public class ALU extends Component {
 //        transform.rotate(Math.toRadians(45), r.getCenterX(), r.getCenterY());
     }
 
+    public List getInputs(){
+        return inputs;
+    }
+    
     /**
      *
      * @param g

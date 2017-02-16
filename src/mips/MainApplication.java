@@ -77,13 +77,14 @@ public class MainApplication extends JFrame implements Runnable {
         Component.center(application, im);
         components.add(im);
         
-        Component.wire(im, dm);
-
         half = application.getBounds();
         half.width /= 4;
         ProgramCounter pc = ProgramCounter.getInstance();
         Component.center(half, pc);
         components.add(pc);
+        
+//        Component.wire(alu, im);
+        Component.wire(im, dm);
     }
 
     protected void createAndShowGui() {

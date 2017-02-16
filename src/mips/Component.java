@@ -37,23 +37,49 @@ public abstract class Component implements IRenderable {
         inside.setLocation(x, y);
     }
 
+    public static void wire(Component c, Component d) {
+        LinkedList<Rectangle> outputs = c.getOutput();
+        LinkedList<Rectangle> inputs = d.getInput();
+        
+        Rectangle rectangleFromOutput = outputs.getFirst();
+        Rectangle rectangleFromInput = inputs.getFirst();
+        
+        Point output = getCenter(rectangleFromOutput);
+        Point input = getCenter(rectangleFromInput);
+        
+        Line2D line = new Line2D.Double(input, output);
+        c.addLine(line);
+    }
+
     private final Rectangle bounds;
     private final Color color;
-    private Rectangle input;
-    private Rectangle output;
-    private List<Line2D> lines;
+    private final LinkedList<Rectangle> input;
+    private final LinkedList<Rectangle> output;
+    private final List<Line2D> lines;
 
     public Component(Rectangle bounds, Color color) {
         this.bounds = bounds;
         this.color = color;
         this.lines = new LinkedList<Line2D>();
+        this.input = new LinkedList<Rectangle>();
+        this.output = new LinkedList<Rectangle>();
 
         if (bounds != null) {
-            fixPoles();
+            addPoles();
         }
     }
 
-    private void fixPoles() {
+    private void resetPoles() {
+        input.clear();
+        output.clear();
+        addPoles();
+    }
+    
+    private void addPoles() {
+        addPoles(bounds.getBounds());
+    }
+
+    public void addPoles(Rectangle bounds) {
         Dimension d = new Dimension(16, 16);
 
         Point in = new Point(bounds.x, (int) bounds.getCenterY());
@@ -61,8 +87,8 @@ public abstract class Component implements IRenderable {
         Point out = in.getLocation();
         out.translate(bounds.width, 0);
 
-        input = new Rectangle(in, d);
-        output = new Rectangle(out, d);
+        input.add(new Rectangle(in, d));
+        output.add(new Rectangle(out, d));
     }
 
     private void drawLines(Graphics g) {
@@ -84,18 +110,18 @@ public abstract class Component implements IRenderable {
         }
     }
 
-    public void drawPoles(Graphics g, Rectangle input, Rectangle output) {
+    public void drawPoles(Graphics g, LinkedList<Rectangle> inputs,
+            LinkedList<Rectangle> outputs) {
         g.setColor(color);
-        g.fillRect(input.x, input.y, input.width, input.height);
-        g.fillRect(output.x, output.y, output.width, output.height);
-        drawLines(g);
-    }
 
-    public static void wire(Component c, Component d) {
-        Point output = c.getOutput();
-        Point input = d.getInput();
-        Line2D line = new Line2D.Double(input, output);
-        c.addLine(line);
+        for (Rectangle input : inputs) {
+            for (Rectangle output : outputs) {
+                g.fillRect(input.x, input.y, input.width, input.height);
+                g.fillRect(output.x, output.y, output.width, output.height);
+            }
+        }
+
+        drawLines(g);
     }
 
     public void addLine(Line2D line) {
@@ -170,20 +196,24 @@ public abstract class Component implements IRenderable {
 
     public void setLocation(Point p) {
         bounds.setLocation(p);
-        fixPoles();
+        resetPoles();
     }
 
     public void setSize(Dimension d) {
         bounds.setSize(d);
-        fixPoles();
+        resetPoles();
     }
 
-    public Point getInput() {
-        return new Point((int) input.getCenterX(), (int) input.getCenterY());
+    public static Point getCenter(Rectangle shape) {
+        return new Point((int) shape.getCenterX(), (int) shape.getCenterY());
     }
 
-    public Point getOutput() {
-        return new Point((int) output.getCenterX(), (int) output.getCenterY());
+    public LinkedList<Rectangle> getInput() {
+        return new LinkedList<Rectangle>(input);
+    }
+
+    public LinkedList<Rectangle> getOutput() {
+        return new LinkedList<Rectangle>(output);
     }
 
 }

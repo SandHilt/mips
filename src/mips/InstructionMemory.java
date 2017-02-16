@@ -19,7 +19,7 @@ public class InstructionMemory extends Component {
 
     public static InstructionMemory getInstance() {
         if (comp == null) {
-            comp = new InstructionMemory(new Rectangle(190, 180), Color.black);
+            comp = new InstructionMemory(new Rectangle(95, 90), Color.black);
         }
 
         return comp;

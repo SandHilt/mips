@@ -19,7 +19,7 @@ public class DataMemory extends Component {
 
     public static DataMemory getInstance() {
         if (comp == null) {
-            comp = new DataMemory(new Rectangle(90, 80), Color.black);
+            comp = new DataMemory(new Rectangle(95, 90), Color.black);
         }
 
         return comp;

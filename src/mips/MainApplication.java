@@ -59,15 +59,17 @@ public class MainApplication extends JFrame implements Runnable {
     }
 
     private void addComponents() {
-        ProgramCounter pc = ProgramCounter.getInstance();
 
-        Rectangle half = new Rectangle(application);
-        half.width /= 2;
-        Component.center(half, pc);
-        components.add(pc);
+        ALU alu = new ALU();
+        Rectangle half = application.getBounds();
+        half.width = Math.round(half.width * 1 / 2);
+        Component.center(half, alu);
+        components.add(alu);
 
         DataMemory dm = DataMemory.getInstance();
-        half.x += half.width;
+        half = application.getBounds();
+        half.width /= 2;
+        half.x = half.width;
         Component.center(half, dm);
         components.add(dm);
 
@@ -77,9 +79,9 @@ public class MainApplication extends JFrame implements Runnable {
 
         half = application.getBounds();
         half.width /= 4;
-        ALU alu = new ALU();
-        Component.center(half, alu);
-        components.add(alu);
+        ProgramCounter pc = ProgramCounter.getInstance();
+        Component.center(half, pc);
+        components.add(pc);
     }
 
     protected void createAndShowGui() {
@@ -97,11 +99,10 @@ public class MainApplication extends JFrame implements Runnable {
         setLocationRelativeTo(null);
         setVisible(true);
         setResizable(false);
+        setSize(application.getSize());
 
         canvas.createBufferStrategy(2);
         bs = canvas.getBufferStrategy();
-
-        application.setBounds(getBounds());
 
         appThread = new Thread(this);
         appThread.start();

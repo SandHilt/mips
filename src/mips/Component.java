@@ -18,19 +18,19 @@ import java.awt.Rectangle;
  */
 public abstract class Component implements IRenderable {
 
-    private final Rectangle shape;
+    private final Rectangle bounds;
     private final Color color;
 
-    public Rectangle getShape() {
-        return shape.getBounds();
+    public Rectangle getBounds() {
+        return bounds.getBounds();
     }
     
     public void setLocation(Point p) {
-        shape.setLocation(p);
+        bounds.setLocation(p);
     }
     
     public void setSize(Dimension d) {
-        shape.setSize(d);
+        bounds.setSize(d);
     }
     
     public Color getColor() {
@@ -38,7 +38,7 @@ public abstract class Component implements IRenderable {
     }
 
     public Component(Rectangle bounds, Color color) {
-        this.shape = bounds;
+        this.bounds = bounds;
         this.color = color;
     }
     
@@ -57,7 +57,7 @@ public abstract class Component implements IRenderable {
         Rectangle fontBounds = fm.getStringBounds(text, g).getBounds();
 
         /* center in component */
-        center(shape, fontBounds);
+        center(bounds, fontBounds);
 
         /* translate height need to fix */
         fontBounds.translate(0, fm.getAscent());
@@ -80,7 +80,7 @@ public abstract class Component implements IRenderable {
                 /* first position of words */
                 Rectangle block = aux.getBounds();
                 block.height *= len;
-                center(shape, block);
+                center(bounds, block);
                 block.translate(0, fm.getAscent());
                 
                 aux.setLocation(block.getLocation());
@@ -103,7 +103,7 @@ public abstract class Component implements IRenderable {
     }
 
     public static void center(Rectangle outside, Component component) {
-        Rectangle inside = component.getShape();
+        Rectangle inside = component.getBounds();
         center(outside, inside);
         component.setLocation(inside.getLocation());
     }

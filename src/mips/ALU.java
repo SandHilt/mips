@@ -49,16 +49,31 @@ public class ALU extends Component {
         polygon.reset();
 
         int[] xpoints = {
-            r.x, r.x + r.width, r.x + r.width, r.x
+            r.x,
+            r.x + r.width,
+            r.x + r.width,
+            r.x,
+            r.x,
+            r.x + r.width / 2,
+            r.x + r.width / 2,
+            r.x
         };
-
         int[] ypoints = {
-            r.y, r.y, r.y + r.height, r.y + r.height
+            r.y,
+            r.y + r.height / 4,
+            r.y + r.height * 3 / 4,
+            r.y + r.height,
+            r.y + r.height * 3 / 4,
+            r.y + r.height * 5 / 8,
+            r.y + r.height * 3 / 8,
+            r.y + r.height / 4
         };
 
-        int npoints = 4;
+        int npoints = Math.min(xpoints.length, ypoints.length);
 
-        for (int i = 0, j = npoints; i < j; i++) {
+        for (int i = 0, j = npoints;
+                i < j;
+                i++) {
             int x = xpoints[i];
             int y = ypoints[i];
 
@@ -102,7 +117,7 @@ public class ALU extends Component {
     private void resetTransform() {
         transform = new AffineTransform();
         Rectangle r = polygon.getBounds();
-        transform.rotate(Math.toRadians(45), r.getCenterX(), r.getCenterY());
+//        transform.rotate(Math.toRadians(45), r.getCenterX(), r.getCenterY());
     }
 
     /**
@@ -112,7 +127,10 @@ public class ALU extends Component {
      */
     @Override
     public void drawText(Graphics g, String text) {
-        super.drawText(g, text, polygon.getBounds());
+        Rectangle r = polygon.getBounds();
+        r.width /= 2;
+        r.translate(r.width, 0);
+        super.drawText(g, text, r);
     }
 
     /**

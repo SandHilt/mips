@@ -12,5 +12,6 @@ import java.awt.Graphics;
  * @author Bruno
  */
 public interface IRenderable {
+
     public void render(Graphics g);
 }

@@ -14,20 +14,22 @@ import java.awt.Rectangle;
  * @author Bruno
  */
 public class InstructionMemory extends Component {
+
     private static InstructionMemory comp;
+
+    public static InstructionMemory getInstance() {
+        if (comp == null) {
+            comp = new InstructionMemory(new Rectangle(190, 180), Color.black);
+        }
+
+        return comp;
+    }
+
     private final String TEXT;
 
     private InstructionMemory(Rectangle bounds, Color color) {
         super(bounds, color);
         TEXT = "Instruction\nMemory";
-    }
-    
-    public static InstructionMemory getInstance() {
-        if(comp == null){
-            comp = new InstructionMemory(new Rectangle(190, 180), Color.black);
-        }
-        
-        return comp;
     }
 
     @Override
@@ -37,5 +39,5 @@ public class InstructionMemory extends Component {
         g.drawRect(r.x, r.y, r.width, r.height);
         drawText(g, TEXT);
     }
-    
+
 }

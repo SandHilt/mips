@@ -14,21 +14,22 @@ import java.awt.Rectangle;
  * @author Bruno
  */
 public class ProgramCounter extends Component {
+
     private static ProgramCounter pc;
+
+    public static ProgramCounter getInstance() {
+        if (pc == null) {
+            pc = new ProgramCounter(new Rectangle(36, 48), Color.black);
+        }
+
+        return pc;
+    }
     private int id;
     private final String TEXT;
 
     private ProgramCounter(Rectangle bounds, Color color) {
         super(bounds, color);
         TEXT = "PC";
-    }
-    
-    public static ProgramCounter getInstance() {
-        if (pc == null) {
-            pc = new ProgramCounter(new Rectangle(36, 48), Color.black);
-        }
-        
-        return pc;
     }
 
     public int getId() {

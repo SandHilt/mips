@@ -14,20 +14,22 @@ import java.awt.Rectangle;
  * @author Bruno
  */
 public class DataMemory extends Component {
+
     private static DataMemory comp;
-    private final String TEXT;
-    
-    private DataMemory(Rectangle bounds, Color color) {
-        super(bounds, color);
-        TEXT = "Data Memory";
-    }
-    
+
     public static DataMemory getInstance() {
         if (comp == null) {
             comp = new DataMemory(new Rectangle(90, 80), Color.black);
         }
-        
+
         return comp;
+    }
+
+    private final String TEXT;
+
+    private DataMemory(Rectangle bounds, Color color) {
+        super(bounds, color);
+        TEXT = "Data Memory";
     }
 
     @Override
@@ -37,5 +39,5 @@ public class DataMemory extends Component {
         g.drawRect(r.x, r.y, r.width, r.height);
         drawText(g, TEXT);
     }
-    
+
 }

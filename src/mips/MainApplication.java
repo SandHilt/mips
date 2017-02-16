@@ -21,6 +21,27 @@ import javax.swing.SwingUtilities;
  */
 public class MainApplication extends JFrame implements Runnable {
 
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        final MainApplication cl = new MainApplication();
+
+        cl.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cl.onWindowClosing();
+            }
+        });
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                cl.createAndShowGui();
+            }
+        });
+    }
+
     private final Player player;
     private final ArrayList<Component> components;
     private BufferStrategy bs;
@@ -44,13 +65,12 @@ public class MainApplication extends JFrame implements Runnable {
         half.width /= 2;
         Component.center(half, pc);
         components.add(pc);
-        
+
         DataMemory dm = DataMemory.getInstance();
         half.x += half.width;
         Component.center(half, dm);
         components.add(dm);
-        
-        
+
         InstructionMemory im = InstructionMemory.getInstance();
         Component.center(application, im);
         components.add(im);
@@ -80,7 +100,7 @@ public class MainApplication extends JFrame implements Runnable {
 
         canvas.createBufferStrategy(2);
         bs = canvas.getBufferStrategy();
-        
+
         application.setBounds(getBounds());
 
         appThread = new Thread(this);
@@ -139,27 +159,6 @@ public class MainApplication extends JFrame implements Runnable {
         }
 
         System.exit(0);
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        final MainApplication cl = new MainApplication();
-
-        cl.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                cl.onWindowClosing();
-            }
-        });
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                cl.createAndShowGui();
-            }
-        });
     }
 
 }

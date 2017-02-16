@@ -25,14 +25,22 @@ public class ALU extends Component {
     private final String name;
     private AffineTransform transform;
 
+    /**
+     *
+     * @param r
+     * @param c
+     */
     public ALU(Rectangle r, Color c) {
-        super(r, c);
+        super(null, c);
         name = "ALU";
-        transform = new AffineTransform();
         polygon = new Polygon();
         rectToPol(r);
+        resetTransform();
     }
 
+    /**
+     *
+     */
     public ALU() {
         this(new Rectangle(64, 64), Color.black);
     }
@@ -58,32 +66,59 @@ public class ALU extends Component {
         }
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Rectangle getBounds() {
+        return polygon.getBounds();
+    }
+
+    /**
+     *
+     * @param d
+     */
     @Override
     public void setSize(Dimension d) {
-        super.setSize(d);
-
-        Rectangle r = getBounds();
+        Rectangle r = polygon.getBounds();
         r.setSize(d);
         rectToPol(r);
         resetTransform();
     }
 
+    /**
+     *
+     * @param p
+     */
     @Override
     public void setLocation(Point p) {
-        super.setLocation(p);
-
-        Rectangle r = getBounds();
+        Rectangle r = polygon.getBounds();
         r.setLocation(p);
         rectToPol(r);
         resetTransform();
     }
-    
+
     private void resetTransform() {
         transform = new AffineTransform();
         Rectangle r = polygon.getBounds();
         transform.rotate(Math.toRadians(45), r.getCenterX(), r.getCenterY());
     }
 
+    /**
+     *
+     * @param g
+     * @param text
+     */
+    @Override
+    public void drawText(Graphics g, String text) {
+        super.drawText(g, text, polygon.getBounds());
+    }
+
+    /**
+     *
+     * @param g
+     */
     @Override
     public void render(Graphics g) {
         g.setColor(getColor());

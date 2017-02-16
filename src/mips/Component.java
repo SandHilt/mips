@@ -37,17 +37,8 @@ public abstract class Component implements IRenderable {
         inside.setLocation(x, y);
     }
 
-    public void wire(Component d) {
-        LinkedList<Rectangle> inputs = d.getInput();
-        
-        Rectangle rectangleFromOutput = this.output.getFirst();
-        Rectangle rectangleFromInput = inputs.getFirst();
-        
-        Point output = getCenter(rectangleFromOutput);
-        Point input = getCenter(rectangleFromInput);
-        
-        Line2D line = new Line2D.Double(input, output);
-        addLine(line);
+    public static Point getCenter(Rectangle shape) {
+        return new Point((int) shape.getCenterX(), (int) shape.getCenterY());
     }
 
     private final Rectangle bounds;
@@ -64,17 +55,26 @@ public abstract class Component implements IRenderable {
         this.output = new LinkedList<Rectangle>();
 
         if (bounds != null) {
-            addPoles();
+            addPoles(bounds.getBounds());
         }
+    }
+
+    public void wire(Component d) {
+        LinkedList<Rectangle> inputs = d.getInput();
+
+        Rectangle rectangleFromOutput = this.output.poll();
+        Rectangle rectangleFromInput = inputs.poll();
+
+        Point output = getCenter(rectangleFromOutput);
+        Point input = getCenter(rectangleFromInput);
+
+        Line2D line = new Line2D.Double(input, output);
+        addLine(line);
     }
 
     private void resetPoles() {
         input.clear();
         output.clear();
-        addPoles();
-    }
-    
-    private void addPoles() {
         addPoles(bounds.getBounds());
     }
 
@@ -123,8 +123,16 @@ public abstract class Component implements IRenderable {
         drawLines(g);
     }
 
-    public void addLine(Line2D line) {
-        this.lines.add(line);
+    public boolean addLine(Line2D line) {
+        return lines.add(line);
+    }
+
+    public void insertInputPoint(Rectangle r) {
+        input.push(r);
+    }
+
+    public void insertOutputPoint(Rectangle r) {
+        output.push(r);
     }
 
     public void drawText(Graphics g, String text, Rectangle context) {
@@ -203,10 +211,11 @@ public abstract class Component implements IRenderable {
         resetPoles();
     }
 
-    public static Point getCenter(Rectangle shape) {
-        return new Point((int) shape.getCenterX(), (int) shape.getCenterY());
+    protected void clear() {
+        input.clear();
+        output.clear();
     }
-
+    
     public LinkedList<Rectangle> getInput() {
         return new LinkedList<Rectangle>(input);
     }

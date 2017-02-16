@@ -14,7 +14,6 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.util.List;
 
 /**
  *
@@ -25,11 +24,6 @@ public class ALU extends Component {
     private final Polygon polygon;
     private final String name;
     private AffineTransform transform;
-    private List<Point> inputs;
-
-    public enum InputPole {
-        RD, RT
-    };
 
     /**
      *
@@ -42,6 +36,7 @@ public class ALU extends Component {
         polygon = new Polygon();
         rectToPol(r);
         resetTransform();
+
         addPoles(polygon.getBounds());
     }
 
@@ -51,7 +46,7 @@ public class ALU extends Component {
     public ALU() {
         this(new Rectangle(80, 80), Color.black);
     }
-    
+
     private void rectToPol(Rectangle r) {
         polygon.reset();
 
@@ -97,6 +92,36 @@ public class ALU extends Component {
         return polygon.getBounds();
     }
 
+    @Override
+    public void addPoles(Rectangle bounds) {
+        clear();
+
+        Rectangle r = getBounds();
+
+        Dimension d = new Dimension(8, 8);
+
+        Rectangle q = new Rectangle(r.getLocation(), d);
+
+        int middle = Math.floorDiv(-d.width, 2);
+
+        q.translate(middle, middle);
+        q.translate(0, Math.floorDiv(r.height * 1, 8));
+        
+        insertInputPoint(q);
+        
+        Rectangle s = q.getBounds();
+        s.translate(0, Math.floorDiv(r.height * 6, 8));
+        
+        insertInputPoint(s);
+
+        d.setSize(16, 16);
+        middle = Math.floorDiv(-d.width, 2);
+        
+        Point out = new Point(r.x + r.width, (int) r.getCenterY());
+        out.translate(middle, middle);
+        insertOutputPoint(new Rectangle(out, d));
+    }
+
     /**
      *
      * @param d
@@ -129,10 +154,6 @@ public class ALU extends Component {
 //        transform.rotate(Math.toRadians(45), r.getCenterX(), r.getCenterY());
     }
 
-    public List getInputs(){
-        return inputs;
-    }
-    
     /**
      *
      * @param g
@@ -162,5 +183,10 @@ public class ALU extends Component {
         g2.dispose();
 
         drawText(g, name);
+        drawPoles(g);
+    }
+
+    public enum InputPole {
+        RD, RT
     }
 }

@@ -84,6 +84,7 @@ public class MainApplication extends JFrame implements Runnable {
         components.add(pc);
         
         im.wire(dm);
+        pc.wire(alu);
     }
 
     protected void createAndShowGui() {

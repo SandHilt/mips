@@ -6,6 +6,7 @@
 package mips;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -36,8 +37,13 @@ public class ProgramCounter extends Component {
         return this.id;
     }
 
+    @Override
+    public void addPoles(Rectangle bounds) {
+        addPoles(bounds, new Dimension(8, 8));
+    }
+
     public void advanceInstruction() {
-        if(Math.addExact(id, 4) < (Math.pow(2, 32) - 1)){
+        if (Math.addExact(id, 4) < (Math.pow(2, 32) - 1)) {
             id += 4;
         }
     }

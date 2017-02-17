@@ -185,8 +185,4 @@ public class ALU extends Component {
         drawText(g, name);
         drawPoles(g);
     }
-
-    public enum InputPole {
-        RD, RT
-    }
 }

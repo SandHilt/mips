@@ -60,10 +60,24 @@ public abstract class Component implements IRenderable {
     }
 
     public void wire(Component d) {
+        wire(d, InputPole.FIRST);
+    }
+
+    public void wire(Component d, InputPole ip) {
         LinkedList<Rectangle> inputs = d.getInput();
 
-        Rectangle rectangleFromOutput = this.output.poll();
-        Rectangle rectangleFromInput = inputs.poll();
+        Rectangle rectangleFromOutput = this.output.peek();
+
+        Rectangle rectangleFromInput = new Rectangle();
+
+        switch (ip) {
+            case FIRST:
+                rectangleFromInput.setBounds(inputs.peekFirst());
+                break;
+            case SECOND:
+                rectangleFromInput.setBounds(inputs.peekLast());
+                break;
+        }
 
         Point output = getCenter(rectangleFromOutput);
         Point input = getCenter(rectangleFromInput);
@@ -79,8 +93,10 @@ public abstract class Component implements IRenderable {
     }
 
     public void addPoles(Rectangle bounds) {
-        Dimension d = new Dimension(16, 16);
-
+        addPoles(bounds, new Dimension(16, 16));
+    }
+    
+    public void addPoles(Rectangle bounds, Dimension d) {
         Point in = new Point(bounds.x, (int) bounds.getCenterY());
         in.translate(Math.floorDiv(-d.width, 2), Math.floorDiv(-d.height, 2));
         Point out = in.getLocation();
@@ -206,6 +222,17 @@ public abstract class Component implements IRenderable {
         resetPoles();
     }
 
+    public void setLocation(int x, int y) {
+        bounds.setLocation(x, y);
+        resetPoles();
+    }
+
+    public void setSize(int width, int height) {
+        bounds.setSize(width, height);
+        resetPoles();
+    }
+    
+
     public void setSize(Dimension d) {
         bounds.setSize(d);
         resetPoles();
@@ -215,7 +242,7 @@ public abstract class Component implements IRenderable {
         input.clear();
         output.clear();
     }
-    
+
     public LinkedList<Rectangle> getInput() {
         return new LinkedList<Rectangle>(input);
     }
@@ -223,5 +250,9 @@ public abstract class Component implements IRenderable {
     public LinkedList<Rectangle> getOutput() {
         return new LinkedList<Rectangle>(output);
     }
+
+    public enum InputPole {
+        FIRST, SECOND
+    };
 
 }
